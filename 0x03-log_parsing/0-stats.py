@@ -46,6 +46,6 @@ try:
             else:
                 print_metrics()
                 i = 0
-                my_dict = {}
 except KeyboardInterrupt:
     print_metrics()
+    raise
