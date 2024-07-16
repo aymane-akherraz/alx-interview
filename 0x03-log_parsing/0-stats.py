@@ -36,8 +36,8 @@ try:
         matched = re.fullmatch(pattern, line)
         if matched:
             file_size += int(matched.group('file_size'))
-            status_code = matched.group('status_code')
-            if my_dict.get(status_code):
+            status_code = int(matched.group('status_code'))
+            if status_code in my_dict:
                 my_dict[status_code] += 1
             else:
                 my_dict[status_code] = 1
