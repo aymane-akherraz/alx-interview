@@ -35,7 +35,10 @@ try:
         line = line.strip('\n')
         matched = re.fullmatch(pattern, line)
         if matched:
-            file_size += int(matched.group('file_size'))
+            try:
+                file_size += int(matched.group('file_size'))
+            except ValueError:
+                pass
             status_code = matched.group('status_code')
             if status_code in my_dict.keys():
                 my_dict[status_code] += 1
