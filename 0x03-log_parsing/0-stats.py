@@ -4,7 +4,7 @@ import sys
 import re
 
 
-def handler(sig, frame):
+def print_metrics():
     """ Print metrics to stdout """
     print('File size: {}'.format(file_size))
     sorted_keys = sorted(my_dict.keys())
@@ -33,13 +33,6 @@ pattern = (
 try:
     for line in sys.stdin:
         line = line.strip('\n')
-        if i < 10:
-            i += 1
-        else:
-            handler(None, None)
-            i = 0
-            file_size = 0
-            my_dict = {}
         matched = re.fullmatch(pattern, line)
         if matched:
             file_size += int(matched.group('file_size'))
@@ -48,6 +41,13 @@ try:
                 my_dict[status_code] += 1
             else:
                 my_dict[status_code] = 1
+        if i < 10:
+            i += 1
+        else:
+            print_metrics()
+            i = 0
+            file_size = 0
+            my_dict = {}
 except KeyboardInterrupt:
-    handler(None, None)
+    print_metrics()
     raise
