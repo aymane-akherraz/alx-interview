@@ -26,27 +26,26 @@ pattern = (
     r"\]"
     r'\s"GET\s/projects/260\sHTTP/1\.1"'
     r"\s"
-    r"(200|301|400|401|403|404|405|500)"
+    r"(?P<status_code>200|301|400|401|403|404|405|500)"
     r"\s"
-    r"([0-9]{1,4})"
+    r"(?P<file_size>[0-9]{1,4})"
 )
 try:
     for line in sys.stdin:
         line = line.strip('\n')
         matched = re.fullmatch(pattern, line)
         if matched:
-            file_size += int(line.split()[-1])
-            status_code = line.split()[-2]
+            file_size += int(matched.group('file_size'))
+            status_code = matched.group('status_code')
             if my_dict.get(status_code):
                 my_dict[status_code] += 1
             else:
                 my_dict[status_code] = 1
-        if i < 9:
-            i += 1
-        else:
-            print_metrics()
-            i = 0
-            my_dict = {}
+            if i < 9:
+                i += 1
+            else:
+                print_metrics()
+                i = 0
+                my_dict = {}
 except KeyboardInterrupt:
     print_metrics()
-    raise
