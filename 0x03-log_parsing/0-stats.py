@@ -16,15 +16,15 @@ my_dict = {str(code): 0 for code in [200, 301, 400, 401, 403, 404, 405, 500]}
 total_file_size = 0
 i = 0
 try:
-    try:
-        for line in sys.stdin:
-            line = line.strip('\n')
+    for line in sys.stdin:
+        line = line.strip('\n')
+        try:
             total_file_size += int(line.split()[-1])
             status_code = line.split()[-2]
             if status_code in my_dict.keys():
                 my_dict[status_code] += 1
-    except Exception:
-        pass
+        except Exception:
+            pass
         i += 1
         if i == 10:
             print_metrics()
