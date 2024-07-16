@@ -37,17 +37,17 @@ try:
         if matched:
             try:
                 file_size += int(matched.group('file_size'))
+                status_code = matched.group('status_code')
+                if status_code in my_dict.keys():
+                    my_dict[status_code] += 1
+                else:
+                    my_dict[status_code] = 1
+                i += 1
+                if i == 10:
+                    print_metrics()
+                    i = 0
             except ValueError:
-                pass
-            status_code = matched.group('status_code')
-            if status_code in my_dict.keys():
-                my_dict[status_code] += 1
-            else:
-                my_dict[status_code] = 1
-            i += 1
-            if i == 10:
-                print_metrics()
-                i = 0
+                continue
 except KeyboardInterrupt:
     print_metrics()
     raise
