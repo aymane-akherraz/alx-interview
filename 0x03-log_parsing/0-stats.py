@@ -41,7 +41,6 @@ try:
                 my_dict[status_code] += 1
             else:
                 my_dict[status_code] = 1
-        print(line)
         if i < 9:
             i += 1
         else:
