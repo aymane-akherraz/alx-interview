@@ -9,7 +9,8 @@ def print_metrics():
     print('File size: {}'.format(file_size))
     sorted_keys = sorted(my_dict.keys())
     for k in sorted_keys:
-        print('{}: {}'.format(k, my_dict[k]))
+        if my_dict[k] > 0:
+            print('{}: {}'.format(k, my_dict[k]))
 
 
 my_dict = {}
@@ -35,19 +36,16 @@ try:
         line = line.strip('\n')
         matched = re.fullmatch(pattern, line)
         if matched:
-            try:
-                file_size += int(matched.group('file_size'))
-                status_code = matched.group('status_code')
-                if status_code in my_dict.keys():
-                    my_dict[status_code] += 1
-                else:
-                    my_dict[status_code] = 1
-                i += 1
-                if i == 10:
-                    print_metrics()
-                    i = 0
-            except ValueError:
-                continue
+            file_size += int(matched.group('file_size'))
+            status_code = matched.group('status_code')
+            if status_code in my_dict.keys():
+                my_dict[status_code] += 1
+            else:
+                my_dict[status_code] = 1
+            i += 1
+            if i == 10:
+                print_metrics()
+                i = 0
 except KeyboardInterrupt:
     print_metrics()
     raise
