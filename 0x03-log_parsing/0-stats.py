@@ -1,43 +1,51 @@
 #!/usr/bin/python3
-"""
-Log parsing
-"""
+""" Reads stdin line by line and computes metrics """
 import sys
+import re
 
 
-def print_metrics(file_size, status_codes):
-    """
-    Print metrics
-    """
-    print("File size: {}".format(file_size))
-    codes_sorted = sorted(status_codes.keys())
-    for code in codes_sorted:
-        if status_codes[code] > 0:
-            print("{}: {}".format(code, status_codes[code]))
+def print_metrics():
+    """ Print metrics to stdout """
+    print('File size: {}'.format(file_size))
+    sorted_keys = sorted(my_dict.keys())
+    for k in sorted_keys:
+        print('{}: {}'.format(k, my_dict[k]))
 
 
-codes_count = {'200': 0, '301': 0, '400': 0, '401': 0,
-               '403': 0, '404': 0, '405': 0, '500': 0}
-file_size_total = 0
-count = 0
-
+my_dict = {}
+file_size = 0
+i = 0
+pattern = (
+    r"([0-9]{1,3}\.){3}[0-9]{1,3}"
+    r"\s-\s"
+    r"\["
+    r"[0-9]{4}-[0-9]{2}-[0-9]{2}"
+    r"\s"
+    r"([0-9]{2}:){2}[0-9]{2}"
+    r"\.[0-9]{6}"
+    r"\]"
+    r'\s"GET\s/projects/260\sHTTP/1\.1"'
+    r"\s"
+    r"(?P<status_code>200|301|400|401|403|404|405|500)"
+    r"\s"
+    r"(?P<file_size>[0-9]{1,4})"
+)
 try:
     for line in sys.stdin:
-        try:
-            status_code = line.split()[-2]
-            if status_code in codes_count.keys():
-                codes_count[status_code] += 1
-            # Grab file size
-            file_size = int(line.split()[-1])
-            file_size_total += file_size
-        except Exception:
-            pass
-        # print metrics if 10 lines have been read
-        count += 1
-        if count == 10:
-            print_metrics(file_size_total, codes_count)
-            count = 0
+        line = line.strip('\n')
+        matched = re.fullmatch(pattern, line)
+        if matched:
+            file_size += int(matched.group('file_size'))
+            status_code = matched.group('status_code')
+            if status_code in my_dict:
+                my_dict[status_code] += 1
+            else:
+                my_dict[status_code] = 1
+        i += 1
+        if i == 10:
+            print_metrics()
+            i = 0
 except KeyboardInterrupt:
-    print_metrics(file_size_total, codes_count)
+    print_metrics()
     raise
-print_metrics(file_size_total, codes_count)
+print_metrics()
