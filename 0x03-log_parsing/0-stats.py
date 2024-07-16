@@ -41,12 +41,12 @@ try:
                 my_dict[status_code] += 1
             else:
                 my_dict[status_code] = 1
-        if i < 10:
+        print(line)
+        if i < 9:
             i += 1
         else:
             print_metrics()
             i = 0
-            file_size = 0
             my_dict = {}
 except KeyboardInterrupt:
     print_metrics()
