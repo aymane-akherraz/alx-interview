@@ -19,15 +19,19 @@ try:
     for line in sys.stdin:
         line = line.strip('\n')
         splited = line.split()
-        if len(splited) == 7:
+        if len(splited) < 7:
+            continue
+        try:
             file_size += int(splited[-1])
             status_code = int(splited[-2])
-            if status_code in my_dict:
-                my_dict[status_code] += 1
-            i += 1
-            if i % 10 == 0:
-                print_metrics(file_size, my_dict)
-        else:
+        except ValueError:
             continue
+        if status_code in my_dict:
+            my_dict[status_code] += 1
+        i += 1
+        if i % 10 == 0:
+            print_metrics(file_size, m  y_dict)
 except KeyboardInterrupt:
+    pass
+finally:
     print_metrics(file_size, my_dict)
