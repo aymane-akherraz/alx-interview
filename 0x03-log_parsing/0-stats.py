@@ -30,8 +30,6 @@ try:
             my_dict[status_code] += 1
         i += 1
         if i % 10 == 0:
-            print_metrics(file_size, m  y_dict)
+            print_metrics(file_size, my_dict)
 except KeyboardInterrupt:
-    pass
-finally:
     print_metrics(file_size, my_dict)
