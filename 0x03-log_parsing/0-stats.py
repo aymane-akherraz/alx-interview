@@ -1,35 +1,44 @@
 #!/usr/bin/python3
-""" Reads stdin line by line and computes metrics """
+"""
+Log parsing
+"""
 import sys
 
 
-def print_metrics(f_size, status_dict):
-    """ Print metrics to stdout """
-    print('File size: {}'.format(f_size))
-    sorted_keys = sorted(status_dict.keys())
-    for k in sorted_keys:
-        if status_dict[k] > 0:
-            print('{}: {}'.format(k, status_dict[k]))
+def print_metrics(file_size, status_codes):
+    """
+    Print metrics
+    """
+    print("File size: {}".format(file_size))
+    codes_sorted = sorted(status_codes.keys())
+    for code in codes_sorted:
+        if status_codes[code] > 0:
+            print("{}: {}".format(code, status_codes[code]))
 
 
-my_dict = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-file_size = 0
-i = 0
-try:
-    for line in sys.stdin:
-        line = line.strip('\n')
-        splited = line.split()
-        if len(splited) < 7:
-            continue
-        try:
-            file_size += int(splited[-1])
-            status_code = int(splited[-2])
-        except ValueError:
-            continue
-        if status_code in my_dict:
-            my_dict[status_code] += 1
-        i += 1
-        if i % 10 == 0:
-            print_metrics(file_size, my_dict)
-except KeyboardInterrupt:
-    print_metrics(file_size, my_dict)
+codes_count = {'200': 0, '301': 0, '400': 0, '401': 0,
+               '403': 0, '404': 0, '405': 0, '500': 0}
+file_size_total = 0
+count = 0
+
+if __name__ == "__main__":
+    try:
+        for line in sys.stdin:
+            try:
+                status_code = line.split()[-2]
+                if status_code in codes_count.keys():
+                    codes_count[status_code] += 1
+                # Grab file size
+                file_size = int(line.split()[-1])
+                file_size_total += file_size
+            except Exception:
+                pass
+            # print metrics if 10 lines have been read
+            count += 1
+            if count == 10:
+                print_metrics(file_size_total, codes_count)
+                count = 0
+    except KeyboardInterrupt:
+        print_metrics(file_size_total, codes_count)
+        raise
+print_metrics(file_size_total, codes_count)
