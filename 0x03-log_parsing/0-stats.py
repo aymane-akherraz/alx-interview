@@ -15,7 +15,6 @@ def print_metrics(f_size, status_dict):
 my_dict = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 file_size = 0
 i = 0
-
 try:
     for line in sys.stdin:
         line = line.strip('\n')
@@ -25,11 +24,11 @@ try:
             status_code = int(splited[-2])
             if status_code in my_dict:
                 my_dict[status_code] += 1
-            if i < 9:
-                i += 1
-            else:
+            i += 1
+            if i % 10 == 0:
                 print_metrics(file_size, my_dict)
-                i = 0
+        else:
+            continue
 except KeyboardInterrupt:
     print_metrics(file_size, my_dict)
-    raise
+
