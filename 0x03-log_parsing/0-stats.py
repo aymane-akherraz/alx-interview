@@ -35,19 +35,18 @@ try:
     for line in sys.stdin:
         line = line.strip('\n')
         matched = re.fullmatch(pattern, line)
-        if matched:
-            try:
-                file_size = int(matched.group('file_size'))
-                total_file_size += file_size
-                status_code = matched.group('status_code')
-                if status_code in my_dict.keys():
-                    my_dict[status_code] += 1
-            except Exception:
-                pass
-            i += 1
-            if i == 10:
-                print_metrics(total_file_size, my_dict)
-                i = 0
+        try:
+            file_size = int(matched.group('file_size'))
+            total_file_size += file_size
+            status_code = matched.group('status_code')
+            if status_code in my_dict.keys():
+                my_dict[status_code] += 1
+        except Exception:
+            pass
+        i += 1
+        if i == 10:
+            print_metrics(total_file_size, my_dict)
+            i = 0
 except KeyboardInterrupt:
     print_metrics(total_file_size, my_dict)
     raise
