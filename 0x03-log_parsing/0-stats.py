@@ -31,4 +31,3 @@ try:
             continue
 except KeyboardInterrupt:
     print_metrics(file_size, my_dict)
-
