@@ -7,9 +7,6 @@ def validUTF8(data):
         represents a valid UTF-8 encoding
     """
 
-    if not data:
-        return False
-
     i = 0
     length = len(data)
 
