@@ -12,7 +12,7 @@ def validUTF8(data):
 
     while i < length:
         byte = data[i]
-        if type(byte) is not int:
+        if byte < 0:
             return False
         if byte < 128:
             i += 1
