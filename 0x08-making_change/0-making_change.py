@@ -13,7 +13,6 @@ def makeChange(coins, total):
 
     coins.sort(reverse=True)
     nb_coins = 0
-
     for c in coins:
         if c <= total:
             while total - c >= 0:
